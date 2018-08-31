@@ -34,14 +34,17 @@ module.exports = {
 
 async function send (client) {
   if (client.data.challenges[moment().month() + 1] && client.data.challenges[moment().month() + 1][moment().date()]) {
-    const embed = {embed: {
-      'title': ':sparkles: Welcome to the Weekly Art Challenge! :sparkles:',
-      'description': `Every Friday I will post a new word prompt for everyone to try and make something creative to!\n\nCheck the pinned post in this channel to see what todays word is.\n\nTODAYS WORD IS\n${client.data.challenges[moment().month() + 1][moment().date()]}\n\nWrite #weekly on your post so everyone can find it!`,
-      'color': 7836572,
-      'thumbnail': {
-        'url': 'https://cdn.discordapp.com/avatars/434066657036730368/334d6ee6b5d30c2b32b25499cdfee9bd.png'
+    const embed = {
+      content: '@ArtChallenge',
+      embed: {
+        'title': ':sparkles: Welcome to the Weekly Art Challenge! :sparkles:',
+        'description': `Every Friday I will post a new word prompt for everyone to try and make something creative to!\n\nCheck the pinned post in this channel to see what todays word is.\n\nTHIS WEEK'S WORD IS\n${client.data.challenges[moment().month() + 1][moment().date()]}\n\nWrite #weekly on your post so everyone can find it!`,
+        'color': 7836572,
+        'thumbnail': {
+          'url': 'https://cdn.discordapp.com/avatars/434066657036730368/334d6ee6b5d30c2b32b25499cdfee9bd.png'
+        }
       }
-    }}
+    }
 
     let sent = await channel.send(embed)
     await sent.pin()

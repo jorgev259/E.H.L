@@ -1,0 +1,18 @@
+{
+  "name": "edada_challenges",
+  "version": "1.0.0",
+  "description": "",
+  "main": "main.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "better-sqlite3": "^4.1.4",
+    "discord.js": "github:hydrabolt/discord.js",
+    "fs-extra": "^7.0.0",
+    "glob": "^7.1.3",
+    "moment": "^2.22.2"
+  }
+}

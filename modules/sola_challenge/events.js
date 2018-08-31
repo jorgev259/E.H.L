@@ -4,8 +4,8 @@ const createCollage = require('photo-collage-latest')
 const moment = require('moment')
 const Discord = require('discord.js')
 
-let lastChallenge = moment(fs.readFileSync('lastChallenge.txt', 'utf8')).utc()
-let lastPin = fs.readFileSync('lastPin.txt', 'utf8')
+let lastChallenge = moment(fs.readFileSync('modules/sola_challenge/lastChallenge.txt', 'utf8')).utc()
+let lastPin = fs.readFileSync('modules/sola_challenge/lastPin.txt', 'utf8')
 let channel
 
 module.exports = {

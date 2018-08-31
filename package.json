@@ -13,6 +13,7 @@
     "discord.js": "github:hydrabolt/discord.js",
     "fs-extra": "^7.0.0",
     "glob": "^7.1.3",
-    "moment": "^2.22.2"
+    "moment": "^2.22.2",
+    "photo-collage-latest": "^1.1.0"
   }
 }

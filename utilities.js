@@ -35,17 +35,17 @@ module.exports = {
   log: function (client, log) {
     console.log(log)
     if (client != null && client.channels.size > 0 && client.readyAt != null) {
-      if (client.data.config.errorChannel && client.channels.some(c => c.name == client.data.config.errorChannel)) {
+      if (client.data.config.errorChannel && client.channels.some(c => c.name === client.data.config.errorChannel)) {
         client.channels.find(val => val.name === client.data.config.errorChannel).send({embed: new Discord.MessageEmbed().setTimestamp().setDescription(log)})
       }
     }
   },
 
   async logEmbed (client, message, embed) {
-    if (!client.data.moderation.logChannel || !message.guild.channels.some(c => c.name == client.data.moderation.logChannel)) {
+    if (!client.data.moderation.logChannel || !message.guild.channels.some(c => c.name === client.data.moderation.logChannel)) {
       message.channel.send(embed)
     } else {
-      message.guild.channels.find(c => c.name == client.data.moderation.logChannel).send(embed)
+      message.guild.channels.find(c => c.name === client.data.moderation.logChannel).send(embed)
     }
   }
 }

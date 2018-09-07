@@ -30,7 +30,7 @@ module.exports = {
 
       if (info) {
         let guild = client.guilds.get(info.guild)
-        let msg = await guild.channels.find(c=>c.name==='general').messages.fetch(info.msg)
+        let msg = await guild.channels.find(c => c.name === 'general').messages.fetch(info.msg)
         msg.delete()
       }
     }

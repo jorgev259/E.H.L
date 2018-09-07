@@ -11,6 +11,7 @@ let channel
 module.exports = {
   async reqs (client, db) {
     await util.checkData(client, 'challenges', {})
+    db.prepare('CREATE TABLE IF NOT EXISTS urls (url TEXT, id TEXT, width INTEGER, height INTEGER)').run()
   },
   events: {
     async ready (client, db) {
@@ -23,19 +24,27 @@ module.exports = {
 
         let nextChallenge = lastChallenge.add(1, 'day').hour(12).minute(0)
         console.log(`Scheduling next challenge to ${nextChallenge}`)
-        setTimeout(send, moment(nextChallenge).diff(moment().utc()), client)
+        setTimeout(send, moment(nextChallenge).diff(moment().utc()), client, db)
       } else {
         console.log("Today's challenge hasn't been sent. Sending challenge...")
-        send(client)
+        send(client, db)
+      }
+    },
+
+    async message (client, db, msg) {
+      if (msg.channel.name === 'solas-art-challenge') {
+        msg.attachments.forEach(a => {
+          db.prepare('INSERT INTO urls (url,id,width,height) VALUES (?,?,?,?)').run(a.url, msg.author.id, a.width, a.height)
+        })
       }
     }
   }
 }
 
-async function send (client) {
+async function send (client, db) {
   if (client.data.challenges[moment().month() + 1] && client.data.challenges[moment().month() + 1][moment().date()]) {
     const embed = {
-      content: '@ArtChallenge',
+      content: `${client.guilds.get('405360375584915456').roles.find(r => r.name === 'ArtChallenge')}`,
       embed: {
         'title': ':sparkles: Welcome to the Weekly Art Challenge! :sparkles:',
         'description': `Every Friday I will post a new word prompt for everyone to try and make something creative to!\n\nCheck the pinned post in this channel to see what todays word is.\n\nTHIS WEEK'S WORD IS\n${client.data.challenges[moment().month() + 1][moment().date()]}\n\nWrite #weekly on your post so everyone can find it!`,
@@ -57,23 +66,18 @@ async function send (client) {
     console.log('Challenge sent')
 
     try {
-      await channel.messages.fetch()
-      let messages = await channel.messages.fetch({before: sent.id, after: pinMessage.id})
-      messages.sweep(m => m.author.bot)
-
-      let attachments = []
-      let authors = []
-
       let width = 0
       let height = 0
-      messages.forEach(m => {
-        m.attachments.forEach(a => {
-          if (a.width > width) width = a.width
-          if (a.height > height) height = a.height
+      let attachments = []
+      let mentions = []
 
-          attachments.push(a.url)
-          authors.push(m.author.tag)
-        })
+      let data = db.prepare('SELECT * FROM urls').all()
+      data.forEach(a => {
+        if (a.width > width) width = a.width
+        if (a.height > height) height = a.height
+
+        attachments.push(a.url)
+        mentions.push(`<@${a.id}>`)
       })
 
       const options = {
@@ -87,7 +91,7 @@ async function send (client) {
 
       createCollage(options)
         .then((canvas) => {
-          channel.send('Thank you for joining last weeks challenge! Every participant will receive 5,000 stars.', new Discord.MessageAttachment(canvas.toBuffer(), 'challenge.jpg'))
+          channel.send(`Thank you for joining last weeks challenge! Every participant will receive 5,000 stars. ${mentions.join(' ')}`, new Discord.MessageAttachment(canvas.toBuffer(), 'challenge.jpg'))
         })
     } catch (e) {
       console.log(e.stack)
@@ -100,5 +104,5 @@ async function send (client) {
   let nextChallenge = lastChallenge.add(1, 'day').hour(12).minute(0)
 
   console.log(`Scheduling next challenge to ${nextChallenge}`)
-  setTimeout(send, moment(nextChallenge).diff(moment().utc()), client)
+  setTimeout(send, moment(nextChallenge).diff(moment().utc()), client, db)
 }

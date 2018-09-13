@@ -100,8 +100,9 @@ async function send (client, db) {
     console.log("There's no challenge for today")
   }
 
-  fs.writeFileSync('lastChallenge.txt', moment().utc().format('YYYY-MM-DD'))
-  let nextChallenge = lastChallenge.add(1, 'day').hour(12).minute(0)
+  let today = moment().utc()
+  fs.writeFileSync('modules/sola_challenge/lastChallenge.txt', today.format('DD/MM/YYYY'))
+  let nextChallenge = today.add(1, 'day').hour(12).minute(0)
 
   console.log(`Scheduling next challenge to ${nextChallenge}`)
   setTimeout(send, moment(nextChallenge).diff(moment().utc()), client, db)

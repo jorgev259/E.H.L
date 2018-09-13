@@ -4,7 +4,7 @@ const fs = require('fs-extra')
 module.exports = {
   async permCheck (message, commandName, client, db) {
     let dbPerms = db.prepare('SELECT item,type FROM perms WHERE command=? AND guild=?').all(commandName, message.guild.id)
-    let perms = {role: [], user: []}
+    let perms = { role: [], user: [] }
     dbPerms.forEach(element => {
       perms[element.type].push(element.item)
     })
@@ -36,7 +36,7 @@ module.exports = {
     console.log(log)
     if (client != null && client.channels.size > 0 && client.readyAt != null) {
       if (client.data.config.errorChannel && client.channels.some(c => c.name === client.data.config.errorChannel)) {
-        client.channels.find(val => val.name === client.data.config.errorChannel).send({embed: new Discord.MessageEmbed().setTimestamp().setDescription(log)})
+        client.channels.find(val => val.name === client.data.config.errorChannel).send({ embed: new Discord.MessageEmbed().setTimestamp().setDescription(log) })
       }
     }
   },

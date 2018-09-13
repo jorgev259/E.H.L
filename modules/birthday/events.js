@@ -25,12 +25,13 @@ module.exports = {
 
 async function send (client, db) {
   let guild = client.guilds.first()
-  guild.members.forEach(m => m.roles.remove(guild.roles.find(r => r.name === 'Happy Birthday!')))
+  let role = guild.roles.find(r => r.name === 'Happy Birthday')
+  console.log(role.name)
+  guild.members.forEach(m => m.roles.remove(role))
   console.log('Removed birthday roles!')
 
   let today = moment().utc()
   let bds = db.prepare('SELECT id FROM birthdays WHERE date=? AND month=?').all(today.date(), today.month())
-  console.log(bds)
 
   if (bds.length) {
     let promises = []
@@ -38,9 +39,7 @@ async function send (client, db) {
       promises.push(new Promise((resolve, reject) => {
         guild.members.fetch(bd.id).then(member => {
           if (member) {
-            console.log('1')
-            member.roles.add(member.guild.roles.find(r => r.name === 'Happy Birthday!')).then(() => {
-              console.log('2')
+            member.roles.add([role]).then(member => {
               member.guild.channels.find(c => c.name === 'general').send(`Happy Birthday to :tada: ${member}!!! :tada: We hope you have a great day~ :yellow_heart:`).then(() => {
                 resolve()
               })
@@ -50,7 +49,6 @@ async function send (client, db) {
       }))
     })
     await Promise.all(promises)
-    console.log(promises)
     console.log('Finished sending birthday grettings')
   } else {
     console.log('There\'s no birthdays today')

@@ -3,7 +3,7 @@ const fs = require('fs-extra')
 
 module.exports = {
   async permCheck (message, commandName, client, db) {
-    await db.prepare('CREATE TABLE IF NOT EXISTS perms (item, TEXT, type TEXT, command TEXT, guild TEXT)')
+    await db.prepare('CREATE TABLE IF NOT EXISTS perms (item, TEXT, type TEXT, command TEXT, guild TEXT)').run()
     let dbPerms = db.prepare('SELECT item,type FROM perms WHERE command=? AND guild=?').all(commandName, message.guild.id)
     let perms = { role: [], user: [] }
     dbPerms.forEach(element => {

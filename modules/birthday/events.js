@@ -27,7 +27,15 @@ async function send (client, db) {
   let guild = client.guilds.first()
   let role = guild.roles.find(r => r.name === 'Happy Birthday')
   console.log(role.name)
-  guild.members.forEach(m => m.roles.remove(role))
+  let p = []
+  guild.members.forEach(m => {
+    p.push(new Promise((resolve, reject) => {
+      m.roles.remove(role).then(() => {
+        resolve()
+      })
+    }))
+  })
+  await Promise.all(p)
   console.log('Removed birthday roles!')
 
   let today = moment().utc()

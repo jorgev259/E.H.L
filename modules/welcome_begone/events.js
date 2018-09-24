@@ -22,6 +22,7 @@ module.exports = {
         let time = (new Date()).getTime()
         db.prepare('INSERT INTO timers (user,msg,guild,timestamp) VALUES (?,?,?,?)').run(msg.mentions.users.first().id, msg.id, msg.guild.id, time + (client.data.wconfig.minutes * 60000))
         setTimeout(check, client.data.wconfig.minutes * 60000, msg.mentions.users.first().id, db)
+        if (msg.content.length >= 600) msg.delete()
       }
     },
 

@@ -1,11 +1,10 @@
 const util = require('../../utilities.js')
 const fs = require('fs')
-const createCollage = require('photo-collage-latest')
+// const createCollage = require('photo-collage-latest')
 const moment = require('moment')
-const Discord = require('discord.js')
+// const Discord = require('discord.js')
 
 let lastChallenge = moment(fs.readFileSync('modules/sola_challenge/lastChallenge.txt', 'utf8')).utc()
-let lastPin = fs.readFileSync('modules/sola_challenge/lastPin.txt', 'utf8')
 let channel
 
 module.exports = {
@@ -58,14 +57,11 @@ async function send (client, db) {
     let sent = await channel.send(embed)
     await sent.pin()
 
-    let pinMessage = channel.messages.get(lastPin)
-    if (pinMessage) pinMessage.unpin()
-
-    lastPin = sent.id
-    fs.writeFileSync('lastPin.txt', lastPin)
+    let pinned = await channel.fetchPinned()
+    pinned.forEach(pm => { if (pm.id !== sent.id) pm.unpin() })
     console.log('Challenge sent')
 
-    try {
+    /* try {
       let width = 0
       let height = 0
       let attachments = []
@@ -95,7 +91,7 @@ async function send (client, db) {
         })
     } catch (e) {
       console.log(e.stack)
-    }
+    } */
   } else {
     console.log("There's no challenge for today")
   }

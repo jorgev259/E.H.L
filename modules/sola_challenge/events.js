@@ -57,7 +57,7 @@ async function send (client, db) {
     let sent = await channel.send(embed)
     await sent.pin()
 
-    let pinned = await channel.fetchPinned()
+    let pinned = await channel.messages.fetchPinned()
     pinned.forEach(pm => { if (pm.id !== sent.id) pm.unpin() })
     console.log('Challenge sent')
 

@@ -23,11 +23,11 @@ module.exports.commands = {
               name: user.user.tag,
               birthday: `${row.date}/${row.month}/${row.year}`
             })
-          })
+          }).catch(() => resolve(undefined))
         })
       })
 
-      hastebin(JSON.stringify(await Promise.all(bds), null, 4), 'json').then(r => {
+      hastebin(JSON.stringify((await Promise.all(bds)).filter(e => e !== undefined), null, 4), 'json').then(r => {
         msg.channel.send(r)
       })
     }

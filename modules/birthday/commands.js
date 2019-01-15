@@ -13,7 +13,7 @@ module.exports.commands = {
     }
   },
 
-  checkBirthdays: {
+  checkbirthdays: {
     async execute (client, msg, param, db) {
       let bds = db.prepare('SELECT id,date,month,year FROM birthdays').all().map(row => {
         return new Promise((resolve, reject) => {

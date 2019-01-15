@@ -27,7 +27,7 @@ module.exports.commands = {
         })
       })
 
-      hastebin(JSON.stringify(bds, null, 4), 'json').then(r => {
+      hastebin(JSON.stringify(await Promise.all(bds), null, 4), 'json').then(r => {
         msg.channel.send(r)
       })
     }

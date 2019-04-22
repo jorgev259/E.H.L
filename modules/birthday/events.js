@@ -5,7 +5,7 @@ let lastChallenge
 
 module.exports = {
   async reqs (client, db) {
-    if (!(await fs.pathExists('data/lastChallenge.txt'))) fs.writeFileSync('data/lastBirthday.txt', moment().subtract(1, 'day').utc())
+    if (!(await fs.pathExists('data/lastBirthday.txt'))) fs.writeFileSync('data/lastBirthday.txt', moment().subtract(1, 'day').utc())
     lastChallenge = moment(fs.readFileSync('data/lastBirthday.txt', 'utf8'), 'DD/MM/YYYY').utc()
 
     db.prepare('CREATE TABLE IF NOT EXISTS birthdays (id TEXT, date INTEGER, month INTEGER, year INTEGER, PRIMARY KEY (id))').run()

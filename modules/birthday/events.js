@@ -65,7 +65,7 @@ async function send (client, db) {
     console.log('There\'s no birthdays today')
   }
 
-  fs.writeFileSync('modules/birthday/lastBirthday.txt', today.format('DD/MM/YYYY'))
+  fs.writeFileSync('data/lastBirthday.txt', today.format('DD/MM/YYYY'))
   let nextChallenge = today.add(1, 'day').hour(12).minute(0)
 
   console.log(`Scheduling next birthday check to ${nextChallenge}`)

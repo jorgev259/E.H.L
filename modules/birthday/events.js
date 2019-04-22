@@ -1,10 +1,13 @@
 const fs = require('fs')
 const moment = require('moment')
 
-let lastChallenge = moment(fs.readFileSync('modules/birthday/lastChallenge.txt', 'utf8'), 'DD/MM/YYYY').utc()
+let lastChallenge
 
 module.exports = {
   async reqs (client, db) {
+    if (!(await fs.pathExists('data/lastChallenge.txt'))) fs.writeFileSync('data/lastBirthday.txt', moment().subtract(1, 'day').utc())
+    lastChallenge = moment(fs.readFileSync('data/lastBirthday.txt', 'utf8'), 'DD/MM/YYYY').utc()
+
     db.prepare('CREATE TABLE IF NOT EXISTS birthdays (id TEXT, date INTEGER, month INTEGER, year INTEGER, PRIMARY KEY (id))').run()
   },
   events: {
@@ -62,7 +65,7 @@ async function send (client, db) {
     console.log('There\'s no birthdays today')
   }
 
-  fs.writeFileSync('modules/birthday/lastChallenge.txt', today.format('DD/MM/YYYY'))
+  fs.writeFileSync('modules/birthday/lastBirthday.txt', today.format('DD/MM/YYYY'))
   let nextChallenge = today.add(1, 'day').hour(12).minute(0)
 
   console.log(`Scheduling next birthday check to ${nextChallenge}`)

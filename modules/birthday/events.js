@@ -30,40 +30,27 @@ async function send (client, db) {
   let guild = client.guilds.first()
   let role = guild.roles.find(r => r.name === 'Happy Birthday')
   console.log(role.name)
-  let p = []
-  guild.members.forEach(m => {
-    p.push(new Promise((resolve, reject) => {
-      m.roles.remove(role).then(() => {
-        resolve()
-      })
-    }))
-  })
-  await Promise.all(p)
-  console.log('Removed birthday roles!')
 
   let today = moment().utc()
-  let bds = db.prepare('SELECT id FROM birthdays WHERE date=? AND month=?').all(today.date(), today.month())
+  let bds = db.prepare('SELECT id FROM birthdays WHERE date=? AND month=?').all(today.date(), today.month()).map(e => e.id)
 
-  if (bds.length) {
-    let promises = []
-    bds.forEach(bd => {
-      promises.push(new Promise((resolve, reject) => {
-        guild.members.fetch(bd.id).then(member => {
-          if (member) {
-            member.roles.add([role]).then(member => {
-              member.guild.channels.find(c => c.name === 'general').send(`Happy Birthday to :tada: ${member}!!! :tada: We hope you have a great day~ :yellow_heart:`).then(() => {
-                resolve()
-              })
-            })
-          }
-        })
-      }))
-    })
-    await Promise.all(promises)
-    console.log('Finished sending birthday grettings')
-  } else {
-    console.log('There\'s no birthdays today')
-  }
+  let members = await guild.members.fetch()
+  let membersBd = members.filter(m => !bds.includes(m.id))
+  let membersOld = members.filter(m => m.has(role.id))
+
+  membersOld.forEach(member => {
+    if (member) {
+      member.roles.remove(role)
+    }
+  })
+
+  membersBd.forEach(member => {
+    if (member) {
+      member.roles.add([role]).then(member => {
+        member.guild.channels.find(c => c.name === 'general').send(`Happy Birthday to :tada: ${member}!!! :tada: We hope you have a great day~ :yellow_heart:`)
+      })
+    }
+  })
 
   fs.writeFileSync('data/lastBirthday.txt', today.format('DD/MM/YYYY'))
   let nextChallenge = today.add(1, 'day').hour(12).minute(0)

@@ -35,7 +35,7 @@ async function send (client, db) {
   let bds = db.prepare('SELECT id FROM birthdays WHERE date=? AND month=?').all(today.date(), today.month()).map(e => e.id)
 
   let members = await guild.members.fetch()
-  let membersBd = members.filter(m => !bds.includes(m.id))
+  let membersBd = members.filter(m => bds.includes(m.id))
   let membersOld = members.filter(m => m.roles.has(role.id))
 
   membersOld.forEach(member => {

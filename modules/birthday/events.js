@@ -36,7 +36,7 @@ async function send (client, db) {
 
   let members = await guild.members.fetch()
   let membersBd = members.filter(m => !bds.includes(m.id))
-  let membersOld = members.filter(m => m.has(role.id))
+  let membersOld = members.filter(m => m.roles.has(role.id))
 
   membersOld.forEach(member => {
     if (member) {

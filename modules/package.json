@@ -1,0 +1,6 @@
+{
+  "name": "dsr_joker",
+  "dependencies": {
+    "hastebin-gen": "^2.0.5"
+  }
+}

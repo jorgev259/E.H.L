@@ -29,6 +29,18 @@ module.exports = {
           }
         })
       })
+    },
+    guildMemberAdd (client, db, member) {
+      db.prepare('INSERT INTO boosts (id,server,lastBoost) VALUES (?,?,?)').run(member.id, member.guild.id, member.premiumSinceTimestamp)
+    },
+    guildMemberRemove (client, db, member) {
+      db.prepare('DELETE FROM boosts WHERE id = ? AND server = ?').run(member.id, member.guild.id)
+    },
+    guildMemberUpdate (client, db, oldMember, newMember) {
+      if (oldMember.premiumSinceTimestamp !== newMember.premiumSinceTimestamp) {
+        db.prepare('UPDATE boosts SET lastBoost = ? WHERE id = ? AND server = ?').run(newMember.premiumSinceTimestamp)
+        if (newMember.premiumSinceTimestamp !== null) newMember.guild.channels.find(c => c.name === 'general').send(`A huge thanks to ${newMember} for boosting the server! :tada:`)
+      }
     }
   }
 }

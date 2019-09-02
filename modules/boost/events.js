@@ -20,7 +20,7 @@ module.exports = {
                 }
               }
             } else {
-              db.prepare('INSERT INTO boosts (id,server,lastBoost) VALUES (?,?,?)').get(member.id, member.guild.id, member.premiumSinceTimestamp)
+              db.prepare('INSERT INTO boosts (id,server,lastBoost) VALUES (?,?,?)').run(member.id, member.guild.id, member.premiumSinceTimestamp)
               console.log(`Synced ${member.user.tag} on guild "${member.guild.name}"`)
             }
           } finally {

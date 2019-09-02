@@ -24,8 +24,8 @@ module.exports = {
               console.log(`Synced ${member.user.tag} on guild "${member.guild.name}"`)
             }
           } finally {
-            console.log(`Progress (${member.guild.name}): ${guildCount}/${members.size}`)
             guildCount++
+            console.log(`Progress (${member.guild.name}): ${guildCount}/${members.size}`)
           }
         })
       })

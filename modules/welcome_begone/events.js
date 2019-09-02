@@ -1,7 +1,7 @@
 const util = require('../../utilities.js')
 module.exports = {
   async reqs (client, db) {
-    await util.checkData(client, 'wconfig', {'minutes': 2})
+    await util.checkData(client, 'wconfig', { 'minutes': 2 })
     db.prepare('CREATE TABLE IF NOT EXISTS timers (user TEXT, msg TEXT, guild TEXT, timestamp TEXT)').run()
   },
   events: {

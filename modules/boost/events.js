@@ -25,6 +25,7 @@ module.exports = {
             }
           } finally {
             console.log(`Progress (${member.guild.name}): ${guildCount}/${members.size}`)
+            guildCount++
           }
         })
       })
